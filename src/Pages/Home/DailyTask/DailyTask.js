@@ -15,7 +15,7 @@ const DailyTask = () => {
     const totalData = {
       dTask: addTask,
     };
-    fetch("http://localhost:5000/dailyTask", {
+    fetch("https://task-management-server-iqbal221.vercel.app/dailyTask", {
       method: "POST",
       headers: {
         "content-type": "application/json",

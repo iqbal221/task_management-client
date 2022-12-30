@@ -10,7 +10,7 @@ const MyTask = () => {
 
   // receive daily task from database
   useEffect(() => {
-    fetch("http://localhost:5000/dailyTask")
+    fetch("https://task-management-server-iqbal221.vercel.app/dailyTask")
       .then((res) => res.json())
       .then((data) => setDailyTask(data));
   }, []);
@@ -18,13 +18,16 @@ const MyTask = () => {
   // delete daily dask from database
   const deleteDailyTask = (id) => {
     console.log(id);
-    fetch(`http://localhost:5000/dailyTask/${id}`, {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-        authorization: `bearer ${localStorage.getItem("task_management")}`,
-      },
-    })
+    fetch(
+      `https://task-management-server-iqbal221.vercel.app/dailyTask/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+          authorization: `bearer ${localStorage.getItem("task_management")}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -42,7 +45,7 @@ const MyTask = () => {
     const taskInfo = {
       CTask: dTask,
     };
-    fetch(`http://localhost:5000/completedTask`, {
+    fetch(`https://task-management-server-iqbal221.vercel.app/completedTask`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -63,7 +66,7 @@ const MyTask = () => {
       <h3 className="text-3xl text-purple-500 text-center font-bold mb-14 mt-24">
         My Task
       </h3>
-      <section className="max-w-2xl p-4 mx-auto  bg-white rounded-md shadow-md dark:bg-gray-800">
+      <section className="max-w-2xl lg:p-6 p-4 mx-auto  bg-white rounded-md shadow-md dark:bg-gray-800">
         {dailyTasks.map((dailyTask, i) => (
           <>
             <ul key={dailyTask._id} className="flex items-center">

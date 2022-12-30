@@ -9,7 +9,7 @@ const CompletedTask = () => {
 
   // receive completed task from database
   useEffect(() => {
-    fetch("http://localhost:5000/completedTask")
+    fetch("https://task-management-server-iqbal221.vercel.app/completedTask")
       .then((res) => res.json())
       .then((data) => setCompletedTask(data));
   }, []);
@@ -17,13 +17,16 @@ const CompletedTask = () => {
   // delete daily dask from database
   const deleteCompletedTask = (id) => {
     console.log(id);
-    fetch(`http://localhost:5000/completedTask/${id}`, {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-        authorization: `bearer ${localStorage.getItem("task_management")}`,
-      },
-    })
+    fetch(
+      `https://task-management-server-iqbal221.vercel.app/completedTask/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+          authorization: `bearer ${localStorage.getItem("task_management")}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
