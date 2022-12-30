@@ -18,6 +18,10 @@ const MyTask = () => {
     console.log(id);
     fetch(`http://localhost:5000/dailyTask/${id}`, {
       method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+        authorization: `bearer ${localStorage.getItem("task_management")}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => {
@@ -32,15 +36,14 @@ const MyTask = () => {
 
   return (
     <div>
-      <h3 className="text-3xl text-purple-500 text-center font-bold mb-8 mt-24">
+      <h3 className="text-3xl text-purple-500 text-center font-bold mb-14 mt-24">
         My Task
       </h3>
-      <section className="max-w-2xl p-6  mx-auto  bg-white rounded-md shadow-md dark:bg-gray-800">
+      <section className="max-w-2xl p-4 mx-auto  bg-white rounded-md shadow-md dark:bg-gray-800">
         {dailyTasks.map((dailyTask, i) => (
           <>
-            <ul key={dailyTask._id} className="flex items-center mt-3 ">
-              <li>{i + 1}</li>
-              <li className="w-[50px]"></li>
+            <ul key={dailyTask._id} className="flex items-center">
+              <li className="w-[50px]">{i + 1}</li>
               <li className="w-[380px]">
                 <h3 className="text-md">{dailyTask.dTask}</h3>
               </li>
@@ -61,7 +64,7 @@ const MyTask = () => {
                 </button>
               </li>
             </ul>
-            <hr className="mt-3" />
+            <hr className="my-2" />
           </>
         ))}
       </section>

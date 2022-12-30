@@ -46,7 +46,7 @@ const DailyTask = () => {
               name="task"
               type="text"
               placeholder="Write Daily Task Here ...."
-              className="file-input border w-full border-purple-500 mt-3 outline-none"
+              className="file-input border p-3 rounded-lg w-full border-purple-500 mt-3 outline-none"
             />
           </div>
         </div>

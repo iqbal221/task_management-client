@@ -62,17 +62,17 @@ const MediaTask = () => {
 
   return (
     <section className="max-w-2xl p-10 my-20 mx-auto bg-white rounded-md shadow-md dark:bg-gray-800">
-      <h3 className="text-3xl text-green-400 text-center font-bold mb-8">
+      <h3 className="text-3xl text-lime-500 text-center font-bold mb-8">
         Media Task
       </h3>
       <form onSubmit={handleSubmit(handleTask)}>
         <div className="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4">
-          <div className="w-full mt-4">
+          <div className="w-full mt-7">
             <div className="form-control ">
               <input
                 name="image"
                 type="file"
-                className="file-input file-input-bordered w-full "
+                className="file-input border-black file-input-bordered w-full "
                 {...register("image")}
               />
             </div>
@@ -83,13 +83,13 @@ const MediaTask = () => {
               name="task"
               type="text"
               placeholder="Write Description Here..."
-              className="textarea  border-green-400 input-neutral w-full "
+              className="textarea border p-5 border-lime-500 input-neutral w-full "
               {...register("task")}
             ></textarea>
           </div>
         </div>
         <div className="form-control mx-auto mt-4">
-          <button className="px-6 py-2 font-medium w-full text-white capitalize transition-colors duration-300 transform bg-green-400 rounded-lg hover:bg-green-300 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+          <button className="px-6 py-2 font-medium w-full text-white capitalize transition-colors duration-300 transform bg-lime-500 rounded-lg hover:bg-lime-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
             Submit
           </button>
         </div>

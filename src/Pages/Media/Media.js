@@ -32,7 +32,7 @@ const Media = () => {
 
   return (
     <div>
-      <h3 className="text-3xl text-green-500 text-center font-bold mb-8 mt-24">
+      <h3 className="text-3xl text-lime-500 text-center font-bold mb-8 mt-24">
         Media Task
       </h3>
       <section className="max-w-2xl p-6  mx-auto  bg-white rounded-md shadow-md dark:bg-gray-800">
@@ -60,7 +60,7 @@ const Media = () => {
                 </button>
               </li>
             </ul>
-            <hr className="text-green-500 mt-3" />
+            <hr className="text-lime-500 mt-3" />
           </>
         ))}
       </section>

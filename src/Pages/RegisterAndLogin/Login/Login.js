@@ -1,14 +1,61 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../Context/AuthProvider";
+import useToken from "../../../Hook/useToken";
 
 const Login = () => {
+  const [userLoginEmail, setUserLoginEmail] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [token] = useToken(userLoginEmail);
+  const { userLogin, googleLogin } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const {
+    handleSubmit,
+    formState: { errors },
+    register,
+  } = useForm();
+
+  if (token) {
+    navigate("/");
+  }
+
+  const handleLogin = (data) => {
+    // console.log(data);
+
+    const email = data.email;
+    const password = data.password;
+
+    userLogin(email, password)
+      .then((result) => {
+        const user = result.user;
+        console.log("user", user);
+        setUserLoginEmail(email);
+        toast.success("User Login Successfully.");
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoginError(error.message);
+      });
+  };
+
+  const handleLoginWithGoogle = () => {
+    googleLogin()
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        navigate("/");
+      })
+      .catch((error) => console.error(error));
+  };
   return (
-    <div className="mt-10 w-full max-w-sm p-6 m-auto mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div className="mt-16 w-full max-w-sm p-6 m-auto mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
       <h1 className="text-3xl font-semibold text-center text-gray-700 dark:text-white">
         Login
       </h1>
 
-      <form className="mt-4">
+      <form onSubmit={handleSubmit(handleLogin)} className="mt-4">
         <div>
           <label
             for="username"
@@ -17,9 +64,17 @@ const Login = () => {
             Email
           </label>
           <input
-            type="text"
+            type="email"
+            {...register("email", {
+              required: "Email Address is required",
+            })}
             className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
           />
+          {errors.email && (
+            <p className="text-red-500" role="alert">
+              {errors.email?.message}
+            </p>
+          )}
         </div>
 
         <div className="mt-4">
@@ -40,8 +95,14 @@ const Login = () => {
 
           <input
             type="password"
+            {...register("password", { required: "Password is required" })}
             className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
           />
+          {errors.password && (
+            <p className="text-red-500" role="alert">
+              {errors.password?.message}
+            </p>
+          )}
         </div>
 
         <div className="mt-6">
@@ -50,7 +111,7 @@ const Login = () => {
           </button>
         </div>
       </form>
-
+      <p className="text-red-500">{loginError}</p>
       <div className="flex items-center justify-between mt-4">
         <span className="w-1/5 border-b dark:border-gray-600 lg:w-1/5"></span>
 
@@ -90,7 +151,11 @@ const Login = () => {
             </svg>
           </div>
 
-          <span className=" px-4 py-3 font-bold text-center">
+          <span
+            type="submit"
+            onClick={handleLoginWithGoogle}
+            className=" px-4 py-3 font-bold text-center"
+          >
             Sign Up with Google
           </span>
         </Link>

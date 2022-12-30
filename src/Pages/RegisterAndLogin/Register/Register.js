@@ -1,25 +1,99 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../Context/AuthProvider";
+import useToken from "../../../Hook/useToken";
 
 const Register = () => {
+  const { createUser, googleLogin } = useContext(AuthContext);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const [signupError, setSignUpError] = useState("");
+  const [createdUserEmail, setCreatedUserEmail] = useState("");
+  const [token] = useToken(createdUserEmail);
+  const navigate = useNavigate();
+
+  if (token) {
+    navigate("/");
+  }
+
+  const handleSignup = (data) => {
+    setSignUpError("");
+    // console.log(data);
+
+    createUser(data.email, data.password)
+      .then((result) => {
+        const user = result.user;
+        console.log("user", user);
+        saveUser(data.email);
+      })
+      .catch((error) => {
+        console.log(error);
+        setSignUpError(error.message);
+      });
+  };
+
+  const handleLoginWithGoogle = () => {
+    googleLogin()
+      .then((result) => {
+        const user = result.user;
+        console.log("google", user);
+        navigate("/");
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const saveUser = (email) => {
+    const user = { email };
+    fetch("http://localhost:5000/users", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.acknowledged) {
+          setCreatedUserEmail(email);
+        }
+        toast.success("User Created Successfully.");
+        // console.log(email);
+      });
+  };
+
   return (
-    <div className="mt-10 w-full max-w-sm p-6 m-auto mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div className="mt-16 w-full max-w-sm p-6 m-auto mx-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
       <h1 className="text-3xl font-semibold text-center text-gray-700 dark:text-white">
         Sign Up
       </h1>
 
-      <form className="mt-4">
-        <div>
+      <form onSubmit={handleSubmit(handleSignup)} className="mt-4">
+        <div className="form-control">
           <label
-            for="username"
+            for="email"
             className="block text-sm text-gray-800 dark:text-gray-200"
           >
             Email
           </label>
           <input
-            type="text"
+            type="email"
             className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+            {...register("email", {
+              required: "Email Address is required",
+            })}
           />
+          {errors.email && (
+            <p className="text-red-500" role="alert">
+              {errors.email?.message}
+            </p>
+          )}
         </div>
 
         <div className="mt-4">
@@ -33,16 +107,29 @@ const Register = () => {
           </div>
 
           <input
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password mininum 6 characters",
+              },
+            })}
             type="password"
             className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
           />
+          {errors.password && (
+            <p className="text-red-500" role="alert">
+              {errors.password?.message}
+            </p>
+          )}
         </div>
 
         <div className="mt-6">
-          <button className="w-full px-6 py-2.5 text-md font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-400 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
+          <button className="w-full px-6 py-2.5 text-md font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
             Sign Up
           </button>
         </div>
+        {signupError && <p className="text-red-500">{signupError}</p>}
       </form>
 
       <div className="flex items-center justify-between mt-4">
@@ -84,7 +171,11 @@ const Register = () => {
             </svg>
           </div>
 
-          <span className=" px-4 py-3 font-bold text-center">
+          <span
+            type="submit"
+            onClick={handleLoginWithGoogle}
+            className=" px-4 py-3 font-bold text-center"
+          >
             Sign Up with Google
           </span>
         </Link>
