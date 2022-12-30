@@ -50,7 +50,7 @@ const Register = () => {
 
   const saveUser = (email) => {
     const user = { email };
-    fetch("https://task-management-server-iqbal221.vercel.app/users", {
+    fetch("http://localhost:5000/users", {
       method: "POST",
       headers: {
         "content-type": "application/json",

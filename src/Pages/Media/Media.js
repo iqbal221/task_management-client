@@ -8,7 +8,7 @@ const Media = () => {
 
   // media task  receive from database
   useEffect(() => {
-    fetch("https://task-management-server-iqbal221.vercel.app/mediaTask")
+    fetch("http://localhost:5000/mediaTask")
       .then((res) => res.json())
       .then((data) => setMediaTask(data));
   }, []);
@@ -16,12 +16,9 @@ const Media = () => {
   // delete media dask from database
   const deleteMediaTask = (id) => {
     console.log(id);
-    fetch(
-      `https://task-management-server-iqbal221.vercel.app/mediaTask/${id}`,
-      {
-        method: "DELETE",
-      }
-    )
+    fetch(`http://localhost:5000/mediaTask/${id}`, {
+      method: "DELETE",
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

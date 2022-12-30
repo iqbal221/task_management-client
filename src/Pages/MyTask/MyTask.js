@@ -1,16 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateIcon from "@mui/icons-material/Update";
 import { toast } from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import UpdateMyTask from "./UpdateMyTask";
+import { AuthContext } from "../../Context/AuthProvider";
 
 const MyTask = () => {
   const [dailyTasks, setDailyTask] = useState([]);
+  const [singleDailyTask, setSingleDailyTask] = useState({});
+  let [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const { isLoading } = useContext(AuthContext);
+
+  const updateDailyTask = (dailyTask) => {
+    setIsOpen(true);
+    setSingleDailyTask(dailyTask);
+  };
 
   // receive daily task from database
   useEffect(() => {
-    fetch("https://task-management-server-iqbal221.vercel.app/dailyTask")
+    fetch("http://localhost:5000/dailyTask")
       .then((res) => res.json())
       .then((data) => setDailyTask(data));
   }, []);
@@ -18,16 +28,13 @@ const MyTask = () => {
   // delete daily dask from database
   const deleteDailyTask = (id) => {
     console.log(id);
-    fetch(
-      `https://task-management-server-iqbal221.vercel.app/dailyTask/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "content-type": "application/json",
-          authorization: `bearer ${localStorage.getItem("task_management")}`,
-        },
-      }
-    )
+    fetch(`http://localhost:5000/dailyTask/${id}`, {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+        authorization: `bearer ${localStorage.getItem("task_management")}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -45,7 +52,7 @@ const MyTask = () => {
     const taskInfo = {
       CTask: dTask,
     };
-    fetch(`https://task-management-server-iqbal221.vercel.app/completedTask`, {
+    fetch(`http://localhost:5000/completedTask`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -61,15 +68,19 @@ const MyTask = () => {
       });
   };
 
+  if (isLoading) {
+    return <div>Loading..</div>;
+  }
+
   return (
     <div>
       <h3 className="text-3xl text-purple-500 text-center font-bold mb-14 mt-24">
         My Task
       </h3>
       <section className="max-w-2xl lg:p-6 p-4 mx-auto  bg-white rounded-md shadow-md dark:bg-gray-800">
-        {dailyTasks.map((dailyTask, i) => (
+        {dailyTasks?.map((dailyTask, i) => (
           <>
-            <ul key={dailyTask._id} className="flex items-center">
+            <ul key={dailyTask?._id} className="flex items-center">
               <li className="w-[50px]">{i + 1}</li>
               <li className="w-[380px]">
                 <h3 className="text-md">{dailyTask.dTask}</h3>
@@ -85,7 +96,7 @@ const MyTask = () => {
               </li>
 
               <li className="w-[80px] text-lg text-center text-blue-600">
-                <button>
+                <button onClick={() => updateDailyTask(dailyTask)}>
                   <UpdateIcon />
                 </button>
               </li>
@@ -99,6 +110,13 @@ const MyTask = () => {
           </>
         ))}
       </section>
+      {/* modal */}
+      <UpdateMyTask
+        singleDailyTask={singleDailyTask}
+        setDailyTask={setDailyTask}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      ></UpdateMyTask>
     </div>
   );
 };

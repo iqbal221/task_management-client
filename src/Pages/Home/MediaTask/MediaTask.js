@@ -39,16 +39,13 @@ const MediaTask = () => {
             image: imageInfo,
           };
 
-          fetch(
-            "https://task-management-server-iqbal221.vercel.app/mediaTask",
-            {
-              method: "POST",
-              headers: {
-                "content-type": "application/json",
-              },
-              body: JSON.stringify(totalData),
-            }
-          )
+          fetch("http://localhost:5000/mediaTask", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(totalData),
+          })
             .then((res) => res.json())
             .then((data) => {
               console.log(data);
