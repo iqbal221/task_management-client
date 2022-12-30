@@ -5,7 +5,9 @@ const useToken = (email) => {
   // const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (email) {
-      fetch(`http://localhost:5000/jwt?email=${email}`)
+      fetch(
+        `https://task-management-server-iqbal221.vercel.app/jwt?email=${email}`
+      )
         .then((res) => res.json())
         .then((data) => {
           if (data.access_token) {

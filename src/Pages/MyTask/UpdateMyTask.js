@@ -23,13 +23,16 @@ export default function UpdateMyTask({
       dTask: newTask,
     };
 
-    fetch(`http://localhost:5000/dailyTask/${singleDailyTask._id}`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(newTaskInfo),
-    })
+    fetch(
+      `https://task-management-server-iqbal221.vercel.app/dailyTask/${singleDailyTask._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(newTaskInfo),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

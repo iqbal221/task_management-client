@@ -20,7 +20,7 @@ const MyTask = () => {
 
   // receive daily task from database
   useEffect(() => {
-    fetch("http://localhost:5000/dailyTask")
+    fetch("https://task-management-server-iqbal221.vercel.app/dailyTask")
       .then((res) => res.json())
       .then((data) => setDailyTask(data));
   }, []);
@@ -28,13 +28,16 @@ const MyTask = () => {
   // delete daily dask from database
   const deleteDailyTask = (id) => {
     console.log(id);
-    fetch(`http://localhost:5000/dailyTask/${id}`, {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-        authorization: `bearer ${localStorage.getItem("task_management")}`,
-      },
-    })
+    fetch(
+      `https://task-management-server-iqbal221.vercel.app/dailyTask/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+          authorization: `bearer ${localStorage.getItem("task_management")}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -52,7 +55,7 @@ const MyTask = () => {
     const taskInfo = {
       CTask: dTask,
     };
-    fetch(`http://localhost:5000/completedTask`, {
+    fetch(`https://task-management-server-iqbal221.vercel.app/completedTask`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
