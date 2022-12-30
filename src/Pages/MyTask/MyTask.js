@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateIcon from "@mui/icons-material/Update";
 import { toast } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 const MyTask = () => {
   const [dailyTasks, setDailyTask] = useState([]);
+  const navigate = useNavigate();
 
   // receive daily task from database
   useEffect(() => {
@@ -34,6 +36,28 @@ const MyTask = () => {
     setDailyTask(remainingTask);
   };
 
+  // save data to database
+  const ToCompletedTask = (dailyTask) => {
+    const { dTask } = dailyTask;
+    const taskInfo = {
+      CTask: dTask,
+    };
+    fetch(`http://localhost:5000/completedTask`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(taskInfo),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.acknowledged) {
+          navigate("/completedTask");
+        }
+      });
+  };
+
   return (
     <div>
       <h3 className="text-3xl text-purple-500 text-center font-bold mb-14 mt-24">
@@ -48,7 +72,16 @@ const MyTask = () => {
                 <h3 className="text-md">{dailyTask.dTask}</h3>
               </li>
 
-              <li className="w-[50px] text-lg text-blue-600">
+              <li className="w-[80px]">
+                <button
+                  onClick={() => ToCompletedTask(dailyTask)}
+                  className="py-1 px-2 text-xs text-white capitalize transition-colors duration-300 transform bg-blue-400 rounded-lg hover:bg-purple-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+                >
+                  completed
+                </button>
+              </li>
+
+              <li className="w-[80px] text-lg text-center text-blue-600">
                 <button>
                   <UpdateIcon />
                 </button>
@@ -56,11 +89,6 @@ const MyTask = () => {
               <li className="w-[50px] text-lg text-red-600">
                 <button onClick={() => deleteDailyTask(dailyTask._id)}>
                   <DeleteIcon />
-                </button>
-              </li>
-              <li className="w-[80px]">
-                <button className="py-1 px-2 text-xs text-white capitalize transition-colors duration-300 transform bg-blue-400 rounded-lg hover:bg-purple-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-                  completed
                 </button>
               </li>
             </ul>

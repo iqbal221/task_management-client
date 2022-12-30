@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { AuthContext } from "../../../Context/AuthProvider";
 
 const Navbar = () => {
+  const [isSelected, setIsSelected] = useState(false);
   const { user, logOut } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -35,8 +36,12 @@ const Navbar = () => {
       .catch((error) => console.log(error));
   };
 
+  if (isSelected) {
+    return <div className="bg-orange-500">{setIsSelected}</div>;
+  }
+
   return (
-    <AppBar position="static" sx={{ bgcolor: "white" }}>
+    <AppBar position="static" sx={{ bgcolor: "white", py: "10px" }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
           {/* large menu */}
@@ -62,6 +67,7 @@ const Navbar = () => {
             {user?.uid ? (
               <>
                 <Button
+                  Selected={isSelected}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
@@ -73,6 +79,7 @@ const Navbar = () => {
                   </Link>
                 </Button>
                 <Button
+                  Selected={isSelected}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >

@@ -79,13 +79,13 @@ const MediaTask = () => {
           </div>
 
           <div className="form-control">
-            <textarea
+            <input
               name="task"
               type="text"
               placeholder="Write Description Here..."
               className="textarea border p-5 border-lime-500 input-neutral w-full "
               {...register("task")}
-            ></textarea>
+            />
           </div>
         </div>
         <div className="form-control mx-auto mt-4">
